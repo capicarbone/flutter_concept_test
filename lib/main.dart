@@ -11,15 +11,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -27,6 +18,83 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class AppBarBottomDecorationPainter extends CustomPainter {
+  Color color;
+
+  AppBarBottomDecorationPainter({this.color = Colors.blue});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint();
+    paint.color = color;
+    Path path = Path();
+
+    path.moveTo(size.width / 2, 0);
+    path.lineTo(size.width, size.height / 2);
+    path.lineTo(size.width / 2, size.height);
+    path.lineTo(0, size.height / 2);
+
+    path.close();
+
+    canvas.drawShadow(path, Colors.black, 2, false);
+    canvas.drawPath(path, paint);
+
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+class CustomTopbar extends StatelessWidget {
+
+  String title;
+  Color color;
+  double margin;
+
+  static const double HEIGHT = 70;
+  static const double SPIKE_HEIGHT = 30;
+
+  CustomTopbar({this.title, this.color, this.margin = 25});
+
+  @override
+  Widget build(BuildContext context) {
+
+    var diamondMargin = margin - 8;
+    return Container(
+      width: double.infinity,
+      height: HEIGHT,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) => Stack(
+
+          children: [
+
+
+          Positioned(
+            bottom: 0,
+            height: SPIKE_HEIGHT,
+            left: diamondMargin,
+            width: constraints.maxWidth - (diamondMargin * 2),
+            child: CustomPaint(
+              painter: AppBarBottomDecorationPainter(color: Colors.limeAccent),
+            ),
+          ),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                color: color,
+                height: HEIGHT - (SPIKE_HEIGHT / 2),
+              ),
+              Text(title.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, ),)
+            ],
+          ),
+        ],),
+      ),
+    );
+  }
+}
 
 
 class MyHomePage extends StatelessWidget {
@@ -36,47 +104,41 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final double margin = 25;
+    final screenSize = MediaQuery.of(context).size;
+    final listHeight = screenSize.height - CustomTopbar.HEIGHT;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        elevation: 0,
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
+      backgroundColor: Colors.limeAccent,
+      body: SafeArea(
+        child: Container(
+          height: double.infinity,
+          child: Stack(
+            children: [
 
-              child: CustomPaint(
+              Positioned(
+                bottom: 0,
+                width: screenSize.width,
+                height: listHeight,
+                child: ListView.builder(
+                  padding: EdgeInsets.only(top: 60),
+                  itemCount: 10,
+                    itemBuilder: (BuildContext context, int index) => SizedBox(
+                      width: double.infinity,
+                      height: 500,
+                      child: Padding(
+                        padding: EdgeInsets.all(margin),
+                        child: Card(
+                          child: Center(child: Text(index.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 100),)),
 
+                        ),
+                      ),
+                    )),
               ),
-            ),
-            Text(
-              'Test concept:',
-            )
-          ],
+              CustomTopbar(title: "Title", color: Colors.limeAccent, margin: margin,),
+
+            ],
+          ),
         ),
       ),
     );
