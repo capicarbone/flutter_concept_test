@@ -1,5 +1,5 @@
 # Flutter Concept Test
 
-Testubg custom app bar idea for quotesbookapp.
+Testing custom app bar idea for quotesbookapp.
 
 ![Result](/docs/result.gif)
