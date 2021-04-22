@@ -39,8 +39,8 @@ class AppBarBottomDecorationPainter extends CustomPainter {
     var paint2 = Paint();
     paint2.color = Colors.black.withOpacity(0.1);
 
-    canvas.drawLine(Offset(0, (size.height / 2) + 2),
-        Offset(size.width, (size.height / 2) + 2), paint2);
+    canvas.drawLine(Offset(0, (size.height / 2) + 1),
+        Offset(size.width, (size.height / 2) + 1), paint2);
     canvas.drawShadow(path, Colors.black, 2, false);
     canvas.drawPath(path, paint);
   }
