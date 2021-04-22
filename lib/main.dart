@@ -111,7 +111,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final double margin = 25;
     final screenSize = MediaQuery.of(context).size;
-    final listHeight = screenSize.height - CustomTopbar.HEIGHT;
+    final listHeight = screenSize.height - CustomTopbar.HEIGHT + (CustomTopbar.SPIKE_HEIGHT / 2);
 
     return Scaffold(
       backgroundColor: Colors.limeAccent,
@@ -125,7 +125,7 @@ class MyHomePage extends StatelessWidget {
                 width: screenSize.width,
                 height: listHeight,
                 child: ListView.builder(
-                    padding: EdgeInsets.only(top: 60),
+                    padding: EdgeInsets.only(top: 20),
                     itemCount: 10,
                     itemBuilder: (BuildContext context, int index) => SizedBox(
                           width: double.infinity,
