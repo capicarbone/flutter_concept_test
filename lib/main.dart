@@ -25,9 +25,9 @@ class AppBarBottomDecorationPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint();
+    var paint = Paint();
     paint.color = color;
-    Path path = Path();
+    var path = Path();
 
     path.moveTo(size.width / 2, 0);
     path.lineTo(size.width, size.height / 2);
@@ -36,9 +36,13 @@ class AppBarBottomDecorationPainter extends CustomPainter {
 
     path.close();
 
+    var paint2 = Paint();
+    paint2.color = Colors.black.withOpacity(0.1);
+
+    canvas.drawLine(Offset(0, (size.height / 2) + 2),
+        Offset(size.width, (size.height / 2) + 2), paint2);
     canvas.drawShadow(path, Colors.black, 2, false);
     canvas.drawPath(path, paint);
-
   }
 
   @override
@@ -48,54 +52,55 @@ class AppBarBottomDecorationPainter extends CustomPainter {
 }
 
 class CustomTopbar extends StatelessWidget {
-
   String title;
   Color color;
   double margin;
 
   static const double HEIGHT = 70;
-  static const double SPIKE_HEIGHT = 30;
+  static const double SPIKE_HEIGHT = 20;
 
   CustomTopbar({this.title, this.color, this.margin = 25});
 
   @override
   Widget build(BuildContext context) {
-
     var diamondMargin = margin - 8;
     return Container(
       width: double.infinity,
       height: HEIGHT,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) => Stack(
-
           children: [
-
-
-          Positioned(
-            bottom: 0,
-            height: SPIKE_HEIGHT,
-            left: diamondMargin,
-            width: constraints.maxWidth - (diamondMargin * 2),
-            child: CustomPaint(
-              painter: AppBarBottomDecorationPainter(color: Colors.limeAccent),
-            ),
-          ),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                color: color,
-                height: HEIGHT - (SPIKE_HEIGHT / 2),
+            Positioned(
+              bottom: 0,
+              height: SPIKE_HEIGHT,
+              left: diamondMargin,
+              width: constraints.maxWidth - (diamondMargin * 2),
+              child: CustomPaint(
+                painter:
+                    AppBarBottomDecorationPainter(color: Colors.limeAccent),
               ),
-              Text(title.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, ),)
-            ],
-          ),
-        ],),
+            ),
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  color: color,
+                  height: HEIGHT - (SPIKE_HEIGHT / 2),
+                ),
+                Text(
+                  title.toUpperCase(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -115,28 +120,34 @@ class MyHomePage extends StatelessWidget {
           height: double.infinity,
           child: Stack(
             children: [
-
               Positioned(
                 bottom: 0,
                 width: screenSize.width,
                 height: listHeight,
                 child: ListView.builder(
-                  padding: EdgeInsets.only(top: 60),
-                  itemCount: 10,
+                    padding: EdgeInsets.only(top: 60),
+                    itemCount: 10,
                     itemBuilder: (BuildContext context, int index) => SizedBox(
-                      width: double.infinity,
-                      height: 500,
-                      child: Padding(
-                        padding: EdgeInsets.all(margin),
-                        child: Card(
-                          child: Center(child: Text(index.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 100),)),
-
-                        ),
-                      ),
-                    )),
+                          width: double.infinity,
+                          height: 500,
+                          child: Padding(
+                            padding: EdgeInsets.all(margin),
+                            child: Card(
+                              child: Center(
+                                  child: Text(
+                                index.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 100),
+                              )),
+                            ),
+                          ),
+                        )),
               ),
-              CustomTopbar(title: "Title", color: Colors.limeAccent, margin: margin,),
-
+              CustomTopbar(
+                title: "home",
+                color: Colors.limeAccent,
+                margin: margin,
+              ),
             ],
           ),
         ),
